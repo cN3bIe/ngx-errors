@@ -27,8 +27,9 @@ export class NgxErrorsDirective implements OnChanges, OnDestroy, AfterViewInit {
   ) { }
 
   get errors() {
-    if (!this.ready) return;
-    return this.control.errors;
+    if (this.ready) {
+      return this.control.errors;
+    }
   }
 
   get hasErrors() {
@@ -44,8 +45,9 @@ export class NgxErrorsDirective implements OnChanges, OnDestroy, AfterViewInit {
   }
 
   getError(name: string) {
-    if (!this.ready) return;
-    return this.control.getError(name);
+    if (this.ready) {
+      return this.control.getError(name);
+    }
   }
 
   private checkPropState(prop: string, name: string, conditions: ErrorOptions): boolean {
@@ -64,10 +66,13 @@ export class NgxErrorsDirective implements OnChanges, OnDestroy, AfterViewInit {
   private checkStatus() {
     const control = this.control;
     const errors = control.errors;
+
     this.ready = true;
-    if (!errors) return;
-    for (const errorName in errors) {
-      this.subject.next({ control, errorName });
+    
+    if (errors) {
+      for (const errorName in errors) {
+        this.subject.next({ control, errorName });
+      }
     }
   }
 
@@ -83,7 +88,9 @@ export class NgxErrorsDirective implements OnChanges, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.subject.unsubscribe();
+    if (this.subject) {
+      this.subject.unsubscribe();
+    }
   }
 
 }
